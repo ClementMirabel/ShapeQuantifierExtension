@@ -453,6 +453,20 @@ class Q3DCWidget(ScriptedLoadableModuleWidget):
         fidList.SetNthFiducialPositionFromArray(numOfMarkups - 1, coord)
 
     def onComputeDistanceClicked(self):
+        fidList = self.logic.selectedFidList
+        fidListA = self.fidListComboBoxA.currentNode()
+        fidListB = self.fidListComboBoxB.currentNode()
+        nameList = [fidListA.GetName(), fidListB.GetName()]
+        if not fidList:
+            self.ShapeQuantifierCore.warningMessage("Please connect a fiducial list to a model.")
+            return
+        for fidListIter in list(set(nameList)):
+            landmarkDescription = slicer.mrmlScene.GetNodesByName(fidListIter).GetItemAsObject(0). \
+                GetAttribute("landmarkDescription")
+            if not landmarkDescription:
+                self.ShapeQuantifierCore.warningMessage(fidListIter + ' is not connected to a model. Please use "Add and Move '
+                                                        'Landmarks" panel to connect the landmarks to a model.')
+                return
         if self.computedDistanceList:
             self.exportDistanceButton.disconnect('clicked()', self.onExportButton)
             self.layout.removeWidget(self.distanceTable)
@@ -470,6 +484,22 @@ class Q3DCWidget(ScriptedLoadableModuleWidget):
         self.logic.exportationFunction(self.directoryExportDistance, self.computedDistanceList, 'distance')
 
     def onComputeAnglesClicked(self):
+        fidList = self.ShapeQuantifierCore.selectedFidList
+        fidListline1LA = self.fidListComboBoxline1LA.currentNode()
+        fidListline1LB = self.fidListComboBoxline1LB.currentNode()
+        fidListline2LA = self.fidListComboBoxline2LA.currentNode()
+        fidListline2LB = self.fidListComboBoxline2LB.currentNode()
+        nameList = [fidListline1LA.GetName(), fidListline1LB.GetName(), fidListline2LA.GetName(), fidListline2LB.GetName()]
+        if not fidList:
+            self.ShapeQuantifierCore.warningMessage("Please connect a fiducial list to a model.")
+            return
+        for fidListIter in list(set(nameList)):
+            landmarkDescription = slicer.mrmlScene.GetNodesByName(fidListIter).GetItemAsObject(0). \
+                GetAttribute("landmarkDescription")
+            if not landmarkDescription:
+                self.ShapeQuantifierCore.warningMessage(fidListIter + ' is not connected to a model. Please use "Add and Move '
+                                                        'Landmarks" panel to connect the landmarks to a model.')
+                return
         if self.computedAnglesList:
             self.exportAngleButton.disconnect('clicked()', self.onExportAngleButton)
             self.layout.removeWidget(self.anglesTable)
@@ -496,6 +526,21 @@ class Q3DCWidget(ScriptedLoadableModuleWidget):
         self.logic.exportationFunction(self.directoryExportAngle, self.computedAnglesList, 'angle')
 
     def onComputeLinePointClicked(self):
+        fidList = self.logic.selectedFidList
+        if not fidList:
+            self.ShapeQuantifierCore.warningMessage("Please connect a fiducial list to a model.")
+            return
+        fidListlineLA = self.fidListComboBoxlineLA.currentNode()
+        fidListlineLB = self.fidListComboBoxlineLB.currentNode()
+        fidListPoint = self.fidListComboBoxlinePoint.currentNode()
+        nameList = [fidListlineLA.GetName(), fidListlineLB.GetName(), fidListPoint.GetName()]
+        for fidListIter in list(set(nameList)):
+            landmarkDescription = slicer.mrmlScene.GetNodesByName(fidListIter).GetItemAsObject(0). \
+                GetAttribute("landmarkDescription")
+            if not landmarkDescription:
+                self.ShapeQuantifierCore.warningMessage(fidListIter + ' is not connected to a model. Please use "Add and Move '
+                                                        'Landmarks" panel to connect the landmarks to a model.')
+                return
         if self.computedLinePointList:
             self.exportLinePointButton.disconnect('clicked()', self.onExportLinePointButton)
             self.layout.removeWidget(self.linePointTable)

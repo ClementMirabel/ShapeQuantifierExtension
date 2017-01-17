@@ -49,12 +49,13 @@ class ShapeQuantifierCore():
         for i in range(0,end):
             fidList = list.GetItemAsObject(i)
             landmarkDescription = self.decodeJSON(fidList.GetAttribute("landmarkDescription"))
-            for key in landmarkDescription.iterkeys():
-                markupsIndex = fidList.GetMarkupIndexByID(key)
-                if key != selectedFidReflID:
-                    fidList.SetNthMarkupLocked(markupsIndex, True)
-                else:
-                    fidList.SetNthMarkupLocked(markupsIndex, False)
+            if landmarkDescription:
+                for key in landmarkDescription.iterkeys():
+                    markupsIndex = fidList.GetMarkupIndexByID(key)
+                    if key != selectedFidReflID:
+                        fidList.SetNthMarkupLocked(markupsIndex, True)
+                    else:
+                        fidList.SetNthMarkupLocked(markupsIndex, False)
         displayNode = self.selectedModel.GetModelDisplayNode()
         displayNode.SetScalarVisibility(False)
         if selectedFidReflID != False:
